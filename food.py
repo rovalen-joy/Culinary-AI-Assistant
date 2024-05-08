@@ -8,7 +8,7 @@ from openai import OpenAI
 client = AsyncOpenAI(api_key=st.secrets["API_key"])
 
 async def generate_response(question, context):
-    model = "ft:gpt-3.5-turbo-1106:west-visayas-state-university::9JDQf0yI"
+    model = "gpt-3.5-turbo"
 
     completion = await client.chat.completions.create(
         model=model,
