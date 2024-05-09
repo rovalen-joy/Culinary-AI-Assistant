@@ -59,15 +59,16 @@ async def app():
 
     # Button to generate response
     if st.button("Find Recipe"):
-    if question and context:
-        response = await generate_response(question, context)
-        recipe, nutrition = response.split('\n\n', 1)
-        st.write("Suggested Recipe:")
-        st.write(recipe)
-        st.write("Nutritional Information:")
-        st.markdown(f"**Nutritional Details:**\n{nutrition.replace(', ', '\n')}", unsafe_allow_html=True)
-    else:
-        st.error("Please make sure you don't leave any field blank.")
+        if question and context:
+            response = await generate_response(question, context)
+            recipe, nutrition = response.split('\n\n', 1)
+            st.write("Suggested Recipe:")
+            st.write(recipe)
+            st.write("Nutritional Information:")
+            st.markdown(f"**Nutritional Details:**\n{nutrition.replace(', ', '\n')}", unsafe_allow_html=True)
+        else:
+            st.error("Please make sure you don't leave any field blank.")
+
 
 # Run the app
 if __name__ == "__main__":
