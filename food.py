@@ -53,7 +53,7 @@ async def app():
    # Context for AI generation based on the user's input
     context = f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, " \
               f"calorie limit: {calories}, ingredients: {ingredients}, allergies: {allergies}, " \
-              f"nutritional goals: {nutritional goals}, skill level: {skill_level}. " \
+              f"nutritional goals: {nutritional_goals}, skill level: {skill_level}. " \
               "Please include the nutritional information."
     question = "What should I cook?"
 
