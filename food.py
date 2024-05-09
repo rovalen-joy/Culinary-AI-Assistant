@@ -36,26 +36,38 @@ async def app():
 
     # Collecting user input for the AI to process
     craving = st.text_input("What are you craving? (e.g., 'something sweet')")
+    cuisine_type = st.selectbox("Select a cuisine type", ['Any', 'American', 'Italian', 'Chinese', 'Indian', 'Mexican', 'Japanese', 'French', 'Thai', 'Other'])
+
+    # Display an additional text input field if the user selects 'Other'
+    if cuisine_type == 'Other':
+        other_cuisine = st.text_input("Please specify the cuisine type")
+        if other_cuisine:
+            cuisine_type = other_cuisine
+
     calories = st.number_input("Calorie limit", min_value=0, step=10, format="%d")
     ingredients = st.text_input("Preferred ingredients (comma-separated)")
     allergies = st.text_input("Any allergies?")
-    nutritional_goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
+    nutritional goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
     skill_level = st.selectbox("Your cooking skill level", ['Beginner', 'Intermediate', 'Advanced'])
 
-    # Context for AI generation based on the user's input
-    context = f"Generate a recipe suggestion based on craving: {craving}, calorie limit: {calories}, " \
-              f"ingredients: {ingredients}, allergies: {allergies}, nutritional goals: {nutritional_goals}, " \
-              f"skill level: {skill_level}."
+   # Context for AI generation based on the user's input
+    context = f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, " \
+              f"calorie limit: {calories}, ingredients: {ingredients}, allergies: {allergies}, " \
+              f"nutritional goals: {nutritional goals}, skill level: {skill_level}. " \
+              "Please include the nutritional information."
     question = "What should I cook?"
 
     # Button to generate response
     if st.button("Find Recipe"):
         if question and context:
             response = await generate_response(question, context)
+            recipe, nutrition = response.split('\n\n', 1) 
             st.write("Suggested Recipe:")
-            st.write(response)
+            st.write(recipe)
+            st.write("Nutritional Information:")
+            st.write(nutrition)
         else:
-            st.error("Please enter both craving and details.")
+            st.error("Please make sure you don't leave any field blank.")
 
 # Run the app
 if __name__ == "__main__":
