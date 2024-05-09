@@ -50,22 +50,22 @@ async def app():
     nutritional_goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
     skill_level = st.selectbox("Your cooking skill level", ['Beginner', 'Intermediate', 'Advanced'])
 
-   # Context for AI generation based on the user's input
-    context = f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, " \
-              f"calorie limit: {calories}, ingredients: {ingredients}, allergies: {allergies}, " \
-              f"nutritional goals: {nutritional_goals}, skill level: {skill_level}. " \
-              "Please include the nutritional information."
+      # Context for AI generation based on the user's input
+    context = (f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, "
+              f"calorie limit: {calories}, ingredients: {ingredients}, allergies: {allergies}, "
+              f"nutritional goals: {nutritional_goals}, skill level: {skill_level}. "
+              "Please include the nutritional information.")
     question = "What should I cook?"
 
-    # Button to generate response
+     # Button to generate response
     if st.button("Find Recipe"):
         if question and context:
             response = await generate_response(question, context)
             recipe, nutrition = response.split('\n\n', 1)
             st.write("Suggested Recipe:")
             st.write(recipe)
-            st.write("Nutritional Information:")
-            st.markdown(f"**Nutritional Details:**\n{nutrition.replace(', ', '\n')}", unsafe_allow_html=True)
+            formatted_nutrition = "**Nutritional Details:**\n" + nutrition.replace(', ', '\n')
+            st.markdown(formatted_nutrition, unsafe_allow_html=True)
         else:
             st.error("Please make sure you don't leave any field blank.")
 
