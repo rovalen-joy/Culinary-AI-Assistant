@@ -18,7 +18,14 @@ async def generate_response(question, context):
     return completion.choices[0].message.content
 
 async def app():
-    st.title("Culinary AI Assistant")
+    st.title("Chefmate: A Culinary AI Assistant")
+
+    st.write(
+        """
+        Welcome to Chefmate! Tell me what you're craving, any dietary preferences or restrictions, and I'll suggest the perfect recipe just for you. 
+        Dive into a world of flavors tailored to your taste and nutritional needs.
+        """
+    )
 
     # Collecting user input for the AI to process
     craving = st.text_input("What are you craving? (e.g., 'something sweet')")
