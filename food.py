@@ -47,7 +47,7 @@ async def app():
     calories = st.number_input("Calorie limit", min_value=0, step=10, format="%d")
     ingredients = st.text_input("Preferred ingredients (comma-separated)")
     allergies = st.text_input("Any allergies?")
-    nutritional goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
+    nutritional_goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
     skill_level = st.selectbox("Your cooking skill level", ['Beginner', 'Intermediate', 'Advanced'])
 
    # Context for AI generation based on the user's input
