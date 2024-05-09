@@ -64,8 +64,8 @@ async def app():
             recipe, nutrition = response.split('\n\n', 1)
             st.write("Suggested Recipe:")
             st.write(recipe)
-            formatted_nutrition = "**Nutritional Details:**\n" + nutrition.replace(', ', '\n')
-            st.markdown(formatted_nutrition, unsafe_allow_html=True)
+            nutrition_formatted = "\n".join(f"- {item.strip()}" for item in nutrition.split(','))
+            st.markdown(f"**Nutritional Details:**\n{nutrition_formatted}", unsafe_allow_html=True)
         else:
             st.error("Please make sure you don't leave any field blank.")
 
