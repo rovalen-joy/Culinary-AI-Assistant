@@ -27,6 +27,13 @@ async def app():
         """
     )
 
+    st.markdown ("""
+    **Submitted By:**
+    - Name: Rovalen Joy U. Calaguing
+    - Course/Year/Section: BSCS 3A AI
+    - Subject: Intelligent Systems (CCS 229)
+    """, unsafe_allow_html=True)
+
     # Collecting user input for the AI to process
     craving = st.text_input("What are you craving? (e.g., 'something sweet')")
     calories = st.number_input("Calorie limit", min_value=0, step=10, format="%d")
