@@ -25,6 +25,8 @@ async def app():
             "West Visayas State University\n")
     
     st.title("Chefmate: A Culinary AI Assistant")
+    
+    st.image("Chefmate_img.png")
 
     st.write(
         """
