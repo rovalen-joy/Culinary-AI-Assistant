@@ -18,6 +18,12 @@ async def generate_response(question, context):
     return completion.choices[0].message.content
 
 async def app():
+    st.text("Submitted By:\n"
+            "Rovalen Joy U. Calaguing\n"
+            "BSCS 3A AI\n"
+            "Intelligent Systems (CCS 229)\n"
+            "West Visayas State University\n")
+    
     st.title("Chefmate: A Culinary AI Assistant")
 
     st.write(
@@ -26,13 +32,6 @@ async def app():
         Dive into a world of flavors tailored to your taste and nutritional needs.
         """
     )
-
-    st.markdown ("""
-    **Submitted By:**
-    - Name: Rovalen Joy U. Calaguing
-    - Course/Year/Section: BSCS 3A AI
-    - Subject: Intelligent Systems (CCS 229)
-    """, unsafe_allow_html=True)
 
     # Collecting user input for the AI to process
     craving = st.text_input("What are you craving? (e.g., 'something sweet')")
