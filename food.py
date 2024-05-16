@@ -2,7 +2,6 @@ import streamlit as st
 import openai
 
 from openai import AsyncOpenAI
-from openai import OpenAI
 
 # Set up the async OpenAI client
 client = AsyncOpenAI(api_key=st.secrets["API_key"])
@@ -39,44 +38,65 @@ async def app():
     craving = st.text_input("What are you craving? (e.g., 'something sweet')")
 
     if craving:
+        st.success(f"Yum! You're craving {craving}. That sounds delicious!")
+
         # Multi-level prompting: Step 2
-        cuisine_type = st.selectbox("Select a cuisine type", ['Any', 'American', 'Italian', 'Chinese', 'Indian', 'Mexican', 'Japanese', 'French', 'Thai', 'Other'])
+        cuisine_type = st.selectbox("Select a cuisine type", ['', 'American', 'Italian', 'Chinese', 'Indian', 'Mexican', 'Japanese', 'French', 'Thai', 'Other'])
 
-        # Display an additional text input field if the user selects 'Other'
-        if cuisine_type == 'Other':
-            other_cuisine = st.text_input("Please specify the cuisine type")
-            if other_cuisine:
-                cuisine_type = other_cuisine
-
-        #Multi-level prompting: Step 3
-        calories = st.slider("Preferred calorie range", 100, 1000, 500)
-
-        #Multi-level prompting: Step 4
-        ingredients = st.text_input("Preferred ingredients (comma-separated)")
-        allergies = st.text_input("Any allergies?")
-        nutritional_goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
-        skill_level = st.selectbox("Your cooking skill level", ['Beginner', 'Intermediate', 'Advanced'])
-
-      # Context for AI generation based on the user's input
-        context = (f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, "
-                f"calorie limit: {calories}, ingredients: {ingredients}, allergies: {allergies}, "
-                f"nutritional goals: {nutritional_goals}, skill level: {skill_level}. "
-                "Please include the nutritional information.")
-        question = "What should I cook?"
-
-        # Button to generate response
-        if st.button("Find Recipe"):
-            if question and context:
-                response = await generate_response(question, context)
-                recipe, nutrition = response.split('\n\n', 1)
-                st.write("Suggested Recipe:")
-                st.write(recipe)
-                st.write("Nutritional Information per Serving:")
-                nutrition_details = nutrition.replace(',', '\n').strip()
-                st.markdown(nutrition_details, unsafe_allow_html=True)
+        if cuisine_type:
+            if cuisine_type == 'Other':
+                other_cuisine = st.text_input("Please specify the cuisine type")
+                if other_cuisine:
+                    cuisine_type = other_cuisine
+                    st.success(f"Great choice! We'll go with {cuisine_type} cuisine.")
             else:
-                st.error("Please make sure you don't leave any field blank.")
+                st.success(f"Awesome! {cuisine_type} cuisine is a fantastic choice.")
 
+            # Multi-level prompting: Step 3
+            calories = st.text_input("Preferred calorie range")
+            if calories:
+                st.success(f"Got it! We'll aim for around {calories} calories per serving.")
+
+                # Multi-level prompting: Step 4
+                ingredients = st.text_input("Preferred ingredients (comma-separated)")
+                if ingredients:
+                    st.success(f"Perfect! We'll include these ingredients: {ingredients}.")
+
+                    allergies = st.text_input("Any allergies? Type 'none' if you have no allergies.")
+                    if allergies:
+                        if allergies.lower() == 'none':
+                            st.success("Great! You don't have any allergies to worry about.")
+                        else:
+                            st.success(f"Thanks for letting us know. We'll avoid these allergens: {allergies}.")
+
+                        nutritional_goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
+                        if nutritional_goals:
+                            st.success(f"Excellent! We'll keep your goal of {nutritional_goals} in mind.")
+
+                            skill_level = st.selectbox("Your cooking skill level", ['', 'Beginner', 'Intermediate', 'Advanced'])
+                            if skill_level:
+                                st.success(f"Great! We'll tailor the recipe to your {skill_level} cooking skills.")
+                            
+                                # Context for AI generation based on the user's input
+                                context = (f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, "
+                                        f"calorie limit: {calories}, ingredients: {ingredients}, allergies: {allergies}, "
+                                        f"nutritional goals: {nutritional_goals}, skill level: {skill_level}. "
+                                        "Please include the nutritional information.")
+                                question = "What should I cook?"
+
+                                # Button to generate response
+                                if st.button("Find Recipe"):
+                                    if question and context:
+                                        response = await generate_response(question, context)
+                                        recipe, nutrition = response.split('\n\n', 1)
+                                        st.write("Here's a delicious recipe just for you!")
+                                        st.write(recipe)
+                                        st.write("Nutritional Information per Serving:")
+                                        nutrition_details = nutrition.replace(',', '\n').strip()
+                                        st.markdown(nutrition_details, unsafe_allow_html=True)
+                                        st.balloons()  # Celebrate the suggestion with balloons
+                                    else:
+                                        st.error("Please make sure you don't leave any field blank.")
 
 # Run the app
 if __name__ == "__main__":
