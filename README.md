@@ -20,7 +20,10 @@ Chefmate is a generative AI application developed for the final project of the C
 - **User-Friendly Interface**: Developed using Streamlit, the interface is intuitive and easy to navigate, providing a seamless user experience.
 
 ## Setup and Installation
-### Prerequisites
-- Python 3.1
-- Streamlit
-- OpenAI API key
+To set up and run Chefmate locally, follow these steps: <br>
+
+**Step 1.** Ensure you have Python 3.7 or higher installed on your system. <br>
+**Step 2.** Install the required dependencies by running pip install streamlit openai. <br> 
+**Step 3.** Obtain an OpenAI API key by signing up for an account at https://beta.openai.com/signup/. <br>
+**Step 4.** Replace st.secrets["API_key"] in the code with your actual OpenAI API key. <br>
+**Step 5.** Run the Streamlit application using the command streamlit run food.py. <br> 
