@@ -35,41 +35,47 @@ async def app():
         """
     )
 
-    # Collecting user input for the AI to process
+    # Multi-level prompting: Step 1
     craving = st.text_input("What are you craving? (e.g., 'something sweet')")
-    cuisine_type = st.selectbox("Select a cuisine type", ['Any', 'American', 'Italian', 'Chinese', 'Indian', 'Mexican', 'Japanese', 'French', 'Thai', 'Other'])
 
-    # Display an additional text input field if the user selects 'Other'
-    if cuisine_type == 'Other':
-        other_cuisine = st.text_input("Please specify the cuisine type")
-        if other_cuisine:
-            cuisine_type = other_cuisine
+    if craving:
+        # Multi-level prompting: Step 2
+        cuisine_type = st.selectbox("Select a cuisine type", ['Any', 'American', 'Italian', 'Chinese', 'Indian', 'Mexican', 'Japanese', 'French', 'Thai', 'Other'])
 
-    calories = st.number_input("Calorie limit", min_value=0, step=10, format="%d")
-    ingredients = st.text_input("Preferred ingredients (comma-separated)")
-    allergies = st.text_input("Any allergies?")
-    nutritional_goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
-    skill_level = st.selectbox("Your cooking skill level", ['Beginner', 'Intermediate', 'Advanced'])
+        # Display an additional text input field if the user selects 'Other'
+        if cuisine_type == 'Other':
+            other_cuisine = st.text_input("Please specify the cuisine type")
+            if other_cuisine:
+                cuisine_type = other_cuisine
+
+        #Multi-level prompting: Step 3
+        calories = st.slider("Preferred calorie range", 100, 1000, 500)
+
+        #Multi-level prompting: Step 4
+        ingredients = st.text_input("Preferred ingredients (comma-separated)")
+        allergies = st.text_input("Any allergies?")
+        nutritional_goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
+        skill_level = st.selectbox("Your cooking skill level", ['Beginner', 'Intermediate', 'Advanced'])
 
       # Context for AI generation based on the user's input
-    context = (f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, "
-              f"calorie limit: {calories}, ingredients: {ingredients}, allergies: {allergies}, "
-              f"nutritional goals: {nutritional_goals}, skill level: {skill_level}. "
-              "Please include the nutritional information.")
-    question = "What should I cook?"
+        context = (f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, "
+                f"calorie limit: {calories}, ingredients: {ingredients}, allergies: {allergies}, "
+                f"nutritional goals: {nutritional_goals}, skill level: {skill_level}. "
+                "Please include the nutritional information.")
+        question = "What should I cook?"
 
-     # Button to generate response
-    if st.button("Find Recipe"):
-        if question and context:
-            response = await generate_response(question, context)
-            recipe, nutrition = response.split('\n\n', 1)
-            st.write("Suggested Recipe:")
-            st.write(recipe)
-            st.write("Nutritional Information per Serving:")
-            nutrition_details = nutrition.replace(',', '\n').strip()
-            st.markdown(nutrition_details, unsafe_allow_html=True)
-        else:
-            st.error("Please make sure you don't leave any field blank.")
+        # Button to generate response
+        if st.button("Find Recipe"):
+            if question and context:
+                response = await generate_response(question, context)
+                recipe, nutrition = response.split('\n\n', 1)
+                st.write("Suggested Recipe:")
+                st.write(recipe)
+                st.write("Nutritional Information per Serving:")
+                nutrition_details = nutrition.replace(',', '\n').strip()
+                st.markdown(nutrition_details, unsafe_allow_html=True)
+            else:
+                st.error("Please make sure you don't leave any field blank.")
 
 
 # Run the app
