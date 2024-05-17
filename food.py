@@ -30,7 +30,7 @@ async def app():
     st.title("Chefmate: A Culinary AI Assistant")
     st.image("Chefmate_img.png")
 
-    # Introduction text of Chefmate
+    # Introduction text
     st.write(
         """
         Welcome to Chefmate! Tell me what you're craving, any dietary preferences or restrictions, and I'll suggest the perfect recipe just for you. 
@@ -39,12 +39,12 @@ async def app():
     )
 
     # System context for feedback generation
-    system_context = "You are a helpful assistant providing culinary suggestions."
+    system_context = "You are a friendly assistant providing brief and positive acknowledgments for user inputs."
 
     # Multi-level prompting: Step 1
     craving = st.text_input("What are you craving? (e.g., 'something sweet')")
     if craving:
-        feedback = await generate_feedback(f"I'm craving {craving}.", system_context)
+        feedback = await generate_feedback(f"I'm craving {craving}. Please acknowledge positively.", system_context)
         st.write(feedback)
 
         # Multi-level prompting: Step 2
@@ -54,63 +54,50 @@ async def app():
                 other_cuisine = st.text_input("Please specify the cuisine type")
                 if other_cuisine:
                     cuisine_type = other_cuisine
-                    feedback = await generate_feedback(f"I want {cuisine_type} cuisine.", system_context)
+                    feedback = await generate_feedback(f"I want {cuisine_type} cuisine. Please acknowledge positively.", system_context)
                     st.write(feedback)
             else:
-                feedback = await generate_feedback(f"I want {cuisine_type} cuisine.", system_context)
+                feedback = await generate_feedback(f"I want {cuisine_type} cuisine. Please acknowledge positively.", system_context)
                 st.write(feedback)
 
             # Multi-level prompting: Step 3
-            calories = st.text_input("Preferred calorie range")
-            if calories:
-                feedback = await generate_feedback(f"I prefer a calorie range of {calories}.", system_context)
+            dietary_restrictions = st.text_area("Any dietary restrictions or preferences? (e.g., 'low-carb, no peanuts, under 500 calories')")
+            if dietary_restrictions:
+                feedback = await generate_feedback(f"My dietary restrictions/preferences are: {dietary_restrictions}. Please acknowledge positively.", system_context)
                 st.write(feedback)
 
                 # Multi-level prompting: Step 4
                 ingredients = st.text_input("Preferred ingredients (comma-separated)")
                 if ingredients:
-                    feedback = await generate_feedback(f"I prefer these ingredients: {ingredients}.", system_context)
+                    feedback = await generate_feedback(f"I prefer these ingredients: {ingredients}. Please acknowledge positively.", system_context)
                     st.write(feedback)
 
                     # Multi-level prompting: Step 5
-                    allergies = st.text_input("Any allergies? Type 'none' if you have no allergies.")
-                    if allergies:
-                        feedback = await generate_feedback(f"I have allergies to: {allergies}.", system_context)
+                    skill_level = st.selectbox("Your cooking skill level", ['', 'Beginner', 'Intermediate', 'Advanced'])
+                    if skill_level:
+                        feedback = await generate_feedback(f"My cooking skill level is {skill_level}. Please acknowledge positively.", system_context)
                         st.write(feedback)
+                        
+                        # Context for AI generation based on the user's input
+                        context = (f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, "
+                                f"dietary restrictions: {dietary_restrictions}, ingredients: {ingredients}, "
+                                f"skill level: {skill_level}. Please include the nutritional information.")
+                        question = "What should I cook?"
 
-                        # Multi-level prompting: Step 6
-                        nutritional_goals = st.text_input("Nutritional goals (e.g., low-carb, high-protein)")
-                        if nutritional_goals:
-                            feedback = await generate_feedback(f"My nutritional goal is: {nutritional_goals}.", system_context)
-                            st.write(feedback)
-
-                            # Multi-level prompting: Step 7
-                            skill_level = st.selectbox("Your cooking skill level", ['', 'Beginner', 'Intermediate', 'Advanced'])
-                            if skill_level:
-                                feedback = await generate_feedback(f"My cooking skill level is {skill_level}.", system_context)
-                                st.write(feedback)
-                                
-                                # Context for AI generation based on the user's input
-                                context = (f"Generate a recipe suggestion based on craving: {craving}, cuisine type: {cuisine_type}, "
-                                        f"calorie limit: {calories}, ingredients: {ingredients}, allergies: {allergies}, "
-                                        f"nutritional goals: {nutritional_goals}, skill level: {skill_level}. "
-                                        "Please include the nutritional information.")
-                                question = "What should I cook?"
-
-                                # Button to generate response
-                                if st.button("Find Recipe"):
-                                    if question and context:
-                                        # Generate recipe suggestion
-                                        response = await generate_response(question, context)
-                                        recipe, nutrition = response.split('\n\n', 1)
-                                        st.write("Here's a delicious recipe just for you!")
-                                        st.write(recipe)
-                                        st.write("Nutritional Information per Serving:")
-                                        nutrition_details = nutrition.replace(',', '\n').strip()
-                                        st.markdown(nutrition_details, unsafe_allow_html=True)
-                                        st.balloons()  # Celebrate the suggestion with balloons
-                                    else:
-                                        st.error("Please make sure you don't leave any field blank.")
+                        # Button to generate response
+                        if st.button("Find Recipe"):
+                            if question and context:
+                                # Generate recipe suggestion
+                                response = await generate_response(question, context)
+                                recipe, nutrition = response.split('\n\n', 1)
+                                st.write("Here's a delicious recipe just for you!")
+                                st.write(recipe)
+                                st.write("Nutritional Information per Serving:")
+                                nutrition_details = nutrition replace(',', '\n').strip()
+                                st.markdown(nutrition_details, unsafe_allow_html=True)
+                                st.balloons()  # Celebrate the suggestion with balloons
+                            else:
+                                st.error("Please make sure you don't leave any field blank.")
 
 # Function to generate the recipe response
 async def generate_response(question, context):
