@@ -93,7 +93,7 @@ async def app():
                                 st.write("Here's a delicious recipe just for you!")
                                 st.write(recipe)
                                 st.write("Nutritional Information per Serving:")
-                                nutrition_details = nutrition replace(',', '\n').strip()
+                                nutrition_details = nutrition.replace(',', '\n').strip()
                                 st.markdown(nutrition_details, unsafe_allow_html=True)
                                 st.balloons()  # Celebrate the suggestion with balloons
                             else:
