@@ -6,7 +6,7 @@ BSCS 3A AI <br>
 West Visayas State University <br> </div>
 <hr>
 
-# <div align="center">Project Title: Chefmate: Crafted for Your Cravings 🍽️</div>
+# <div align="center"> Chefmate: Crafted for Your Cravings 🍽️</div>
 
 ## Project Overview
 <div align="justify">
